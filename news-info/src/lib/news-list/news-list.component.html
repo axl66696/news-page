@@ -1,0 +1,20 @@
+<ng-container *ngIf="news && news.length < 1; else ShowNews">
+  <h1 class="p-datatable" i18n>沒有最新消息</h1>
+</ng-container>
+
+<ng-template #ShowNews>
+  <ng-container [ngTemplateOutlet]="customTemplate || defaultTable"></ng-container>
+
+</ng-template>
+
+<ng-template #defaultTable>
+  <p-table [value]="news!" [tableStyle]="{ width: '100%' }">
+    <ng-template pTemplate="body" let-news>
+      <tr>
+        <td>{{ news.newsStartTime }}</td>
+        <td><span class="label-m">{{ news.newsContent }}</span></td>
+        <td><p-button #navButton i18n-label="請點選進入" styleClass="p-button-link" (click)="directTo(news.url,news.token)"></p-button></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-template>

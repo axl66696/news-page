@@ -1,15 +1,25 @@
 {
-  "name": "news-page",
+  "name": "@his-view/news-page",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js",
+    "compodoc:build": "compodoc -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
+    "compodoc:serve": "compodoc -s",
+    "lint": "ng lint",
+    "i18n:gen": "ng extract-i18n -c zh-Hant"
   },
+  "files": [
+    "dist"
+  ],
   "private": true,
   "dependencies": {
+    "@angular-architects/module-federation": "^16.0.4",
     "@angular/animations": "^16.2.0",
     "@angular/common": "^16.2.0",
     "@angular/compiler": "^16.2.0",
@@ -18,20 +28,41 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
+    "@his-base/datatypes": "git+https://gitlab.aservice.com.tw/hpc-his/base/datatypes.git",
+    "@his-base/jetstream-ws": "git+https://gitlab.aservice.com.tw/hpc-his/base/jetstream-ws.git",
+    "@his-base/shared": "git+https://gitlab.aservice.com.tw/hpc-his/base/shared.git#develop",
+    "@his-viewmodel/appportal": "git+https://gitlab.aservice.com.tw/hpc-his/viewmodel/app-portal.git#develop",
+    "primeflex": "^3.3.1",
+    "primeicons": "^6.0.1",
+    "primeng": "^16.3.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^16.2.3",
+    "@angular-eslint/builder": "16.2.0",
+    "@angular-eslint/eslint-plugin": "16.2.0",
+    "@angular-eslint/eslint-plugin-template": "16.2.0",
+    "@angular-eslint/schematics": "16.2.0",
+    "@angular-eslint/template-parser": "16.2.0",
     "@angular/cli": "~16.2.0",
     "@angular/compiler-cli": "^16.2.0",
+    "@angular/localize": "^16.2.6",
+    "@compodoc/compodoc": "^1.1.21",
     "@types/jasmine": "~4.3.0",
+    "@typescript-eslint/eslint-plugin": "5.62.0",
+    "@typescript-eslint/parser": "5.62.0",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-packagr": "^16.2.0",
+    "ngx-build-plus": "^16.0.0",
     "typescript": "~5.1.3"
   }
 }
