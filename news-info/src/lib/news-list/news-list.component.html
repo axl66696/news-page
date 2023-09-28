@@ -11,8 +11,8 @@
   <p-table [value]="news!" [tableStyle]="{ width: '100%' }">
     <ng-template pTemplate="body" let-news>
       <tr>
-        <td>{{ news.newsStartTime }}</td>
-        <td><span class="label-m">{{ news.newsContent }}</span></td>
+        <td>{{ news.period.start.toLocaleString() }}</td>
+        <td><span class="label-m">{{ news.subject }}</span></td>
         <td><p-button #navButton i18n-label="請點選進入" styleClass="p-button-link" (click)="directTo(news.url,news.token)"></p-button></td>
       </tr>
     </ng-template>

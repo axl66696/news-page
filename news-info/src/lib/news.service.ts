@@ -19,6 +19,10 @@ export class NewsService {
   userProfile = signal<UserProfile>({} as UserProfile)
 
   news = signal<News[]>({} as News[])
+  normalNews = signal<News[]>({} as News[])
+  toDoList = signal<News[]>({} as News[])
+  checkedNormalNews = signal<News[]>({} as News[])
+  checkedToDoList = signal<News[]>({} as News[])
 
   /** 使用Subject變數自nats拿取包含最新消息的使用者資訊
    * @memberof NewsService
@@ -51,6 +55,8 @@ export class NewsService {
 
   setNews(){
     this.news.set(mockNews)
+    this.normalNews.set(this.getFilterNews("10"))
+    this.toDoList.set(this.getFilterNews("60"))
   }
 
   /** 依‘一般消息’、’待辦工作’分類最新消息
@@ -74,16 +80,18 @@ export class NewsService {
   async subNews() {
     this.#userNews = new Subject();
     const jsonCodec = JSONCodec();
-
+    // 'news.getNews.dashboard'
     this.#consumerMessages$ = this.#jetStreamWsService.subscribe(
-      SubscribeType.Pull,
+      SubscribeType.Push,
       'news.getNews.dashboard'
     );
+    console.log("ready to subscribe")
 
     this.#consumerMessages$
       .pipe(
         mergeMap(async (messages) => {
           for await (const message of messages) {
+            console.log('正在聽的subject： ', message.subject);
             this.#userNews.next(jsonCodec.decode(message.data));
             message.ack();
           }
@@ -91,8 +99,16 @@ export class NewsService {
       )
       .subscribe(() => {});
 
-    this.#userNews.subscribe((user: any) => {
-      this.userProfile.set(user[0]);
+
+      this.#userNews.subscribe((news: any) => {
+        console.log("news", news)
+        this.news.set(news);
+        this.normalNews.set(this.getFilterNews("10"))
+        this.toDoList.set(this.getFilterNews("60"))
+        console.log("this.news()", this.news())
+        console.log("this.normalNews()", this.normalNews())
+        console.log("this.toDoListNews()", this.toDoList())
+
     });
 
   }

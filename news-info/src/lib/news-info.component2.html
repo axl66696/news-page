@@ -23,7 +23,7 @@
       </div>
   </div>
   <div class="flex flex-column">
-    <p-fieldset legend="待辦工作" [toggleable]="true" class="first">
+    <p-fieldset legend="未完成" [toggleable]="true" class="first">
       <ng-template pTemplate="expandicon">
         <div >
           <span class="pi pi-chevron-down"></span>
@@ -35,13 +35,13 @@
         </div>
       </ng-template>
       <his-news-list
-        [news]="toDoList()"
+        [news]="toDoListNews()"
         class="news-container"
         [customTemplate]="customTemplateUnfinish"
       ></his-news-list>
     </p-fieldset>
 
-    <p-fieldset legend="公告訊息" [toggleable]="true" class="second">
+    <p-fieldset legend="一般消息" [toggleable]="true" class="second">
       <ng-template pTemplate="expandicon">
         <div>
           <span class="pi pi-chevron-down"></span>
@@ -55,29 +55,11 @@
       <his-news-list
         [news]="normalNews()"
         class="news-container"
-        [customTemplate]="customTemplateAnnoucement"
+        [customTemplate]="customTemplateGenerate"
       ></his-news-list>
     </p-fieldset>
 
-    <p-fieldset legend="完成工作" [toggleable]="true" class="third">
-      <ng-template pTemplate="expandicon">
-        <div>
-          <span class="pi pi-chevron-down"></span>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="collapseicon">
-        <div>
-          <span class="pi pi-chevron-up"></span>
-        </div>
-      </ng-template>
-      <his-news-list
-        [news]="normalNews()"
-        class="news-container"
-        [customTemplate]="customTemplateCompleted"
-      ></his-news-list>
-    </p-fieldset>
-
-    <p-fieldset legend="已讀訊息" [toggleable]="true" class="fourth">
+    <p-fieldset legend="已完成" [toggleable]="true" class="third">
       <ng-template pTemplate="expandicon">
         <div>
           <span class="pi pi-chevron-down"></span>
@@ -99,7 +81,7 @@
 
 <ng-template #customTemplateUnfinish>
   <p-table
-    [value]="toDoList()"
+    [value]="toDoListNews()"
     [tableStyle]="{ width: '100%' }"
   >
     <ng-template pTemplate="body" let-news>
@@ -109,13 +91,11 @@
             pButton
             pRipple
             type="button"
-            label="完成"
-            class="p-button-outlined"
+            label="NEW"
+            class="p-button-outlined p-button-warning"
           ></button>
         </td>
-        <td>
-          <span class="label-m">{{ news.period.start.toLocaleString() }}</span>
-        </td>
+        <td>{{ news.period.start.toLocaleString() }}</td>
         <td>
           <span class="label-m">{{ news.subject }}</span>
         </td>
@@ -129,7 +109,7 @@
   </p-table>
 </ng-template>
 
-<ng-template #customTemplateAnnoucement>
+<ng-template #customTemplateGenerate>
   <p-table
     [value]="normalNews()"
     [tableStyle]="{ width: '100%' }"
@@ -141,8 +121,8 @@
             pButton
             pRipple
             type="button"
-            label="已讀"
-            class="p-button-outlined"
+            label="NEW"
+            class="p-button-outlined p-button-warning"
           ></button>
         </td>
         <td>{{ news.period.start.toLocaleString() }}</td>
@@ -166,6 +146,15 @@
   >
     <ng-template pTemplate="body" let-news>
       <tr>
+        <td>
+          <button
+            pButton
+            pRipple
+            type="button"
+            label="NEW"
+            class="p-button-outlined p-button-warning"
+          ></button>
+        </td>
         <td>{{ news.period.start.toLocaleString() }}</td>
         <td>
           <span class="label-m">{{ news.subject }}</span>

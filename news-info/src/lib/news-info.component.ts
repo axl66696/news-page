@@ -1,5 +1,5 @@
 /* eslint-disable @angular-eslint/component-selector */
-import { Component, OnInit, inject, signal, Input } from '@angular/core';
+import { Component, OnInit, inject, signal, Input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NewsService } from './news.service';
 import { NewsListComponent } from './news-list/news-list.component'
@@ -25,13 +25,13 @@ export class NewsInfoComponent implements OnInit{
   /** 使用Signal變數儲存UserProfile型別的使用者資訊
    * @memberof NewsInfoComponent
    */
-  // userProfile = signal<UserProfile>({} as UserProfile)
-  news = signal<News[]>({} as News[])
-  normalNews = signal<News[]>({} as News[])
-  toDoListNews = signal<News[]>({} as News[])
+
+  news = computed(() => this.newsService.news());
+  normalNews = computed(() => this.newsService.normalNews());
+  toDoList = computed(() => this.newsService.toDoList());
+  // checkedNormalNews = computed(() => this.newsService.checkedNormalNews());
 
   newsService = inject(NewsService)
-  // userProfileService = inject(UserProfileService)
   #router = inject(Router)
 
 
@@ -39,23 +39,15 @@ export class NewsInfoComponent implements OnInit{
    * @memberof NewsInfoComponent
    */
   async ngOnInit() {
-    // this.newsService.getNewsFromNats(mockNews);
+
     this.newsService.setNews();
     console.log("newsService userNews", this.newsService.news)
-
-    this.news.set(this.newsService.news())
     console.log("newsInfo news", this.news())
-
-    this.normalNews.set(this.newsService.getFilterNews("10"))
-    this.toDoListNews.set(this.newsService.getFilterNews("60"))
-    console.log("公告消息", this.normalNews())
-    console.log("待辦工作", this.toDoListNews()) // coding是這樣用？
-
+    console.log("公告消息", this.normalNews)
+    console.log("待辦工作", this.toDoList) // coding是這樣用？
     await this.newsService.connect();
+    await this.newsService.subNews()
 
-    setTimeout(()=>{
-        this.newsService.subNews()
-    }, 300)
   }
 
   /** 跳轉到上一頁
