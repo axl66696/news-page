@@ -1,5 +1,6 @@
 import { OnInit } from '@angular/core';
 import { NewsService } from './news.service';
+import { Coding } from '@his-base/datatypes';
 import { News } from '@his-viewmodel/appportal/dist';
 import * as i0 from "@angular/core";
 export declare class NewsInfoComponent implements OnInit {
@@ -9,7 +10,9 @@ export declare class NewsInfoComponent implements OnInit {
      */
     news: import("@angular/core").Signal<News[]>;
     normalNews: import("@angular/core").Signal<News[]>;
-    toDoListNews: import("@angular/core").Signal<News[]>;
+    toDoList: import("@angular/core").Signal<News[]>;
+    checkedNormalNews: import("@angular/core").Signal<News[]>;
+    checkedToDoList: import("@angular/core").Signal<News[]>;
     newsService: NewsService;
     /** 初始化使用者資訊
      * @memberof NewsInfoComponent
@@ -25,6 +28,7 @@ export declare class NewsInfoComponent implements OnInit {
      * @memberof NewsInfoComponent
      */
     onNavNewsClick(appUrl: string, sharedData: object): void;
+    onChangeStatus(userCode: Coding, newsId: string): Promise<void>;
     static ɵfac: i0.ɵɵFactoryDeclaration<NewsInfoComponent, never>;
     static ɵcmp: i0.ɵɵComponentDeclaration<NewsInfoComponent, "his-news-info", never, {}, {}, never, never, true, never>;
 }

@@ -12,6 +12,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { UserProfile } from '../public-api';
 import { Coding } from '@his-base/datatypes';
 import { News } from '@his-viewmodel/appportal/dist'
+import { JetstreamWsService } from '@his-base/jetstream-ws';
 
 @Component({
   selector: 'his-news-info',
@@ -29,9 +30,11 @@ export class NewsInfoComponent implements OnInit{
   news = computed(() => this.newsService.news());
   normalNews = computed(() => this.newsService.normalNews());
   toDoList = computed(() => this.newsService.toDoList());
-  // checkedNormalNews = computed(() => this.newsService.checkedNormalNews());
+  checkedNormalNews = computed(() => this.newsService.checkedNormalNews());
+  checkedToDoList = computed(()=>this.newsService.checkedToDoList())
 
   newsService = inject(NewsService)
+  #jetStreamWsService = inject(JetstreamWsService);
   #router = inject(Router)
 
 
@@ -41,13 +44,14 @@ export class NewsInfoComponent implements OnInit{
   async ngOnInit() {
 
     this.newsService.setNews();
+    await this.newsService.connect();
+    await this.newsService.subNews()
+    await this.newsService.getNewsFromNats();
     console.log("newsService userNews", this.newsService.news)
     console.log("newsInfo news", this.news())
     console.log("公告消息", this.normalNews)
-    console.log("待辦工作", this.toDoList) // coding是這樣用？
-    await this.newsService.connect();
-    await this.newsService.subNews()
-
+    console.log("待辦工作", this.toDoList)
+    console.log("現在時間", new Date)
   }
 
   /** 跳轉到上一頁
@@ -66,6 +70,12 @@ export class NewsInfoComponent implements OnInit{
     alert(`導向到 -------> ${appUrl}token值：${sharedData}`)
     this.#router.navigate([appUrl],{state:sharedData})
   }
+
+  async onChangeStatus(userCode:Coding, newsId:string){
+    const date = new Date
+    await this.#jetStreamWsService.publish("news.updateStatus", {userCode, newsId, date})
+  }
+
 }
 
 // export const mockNews:News[] =[

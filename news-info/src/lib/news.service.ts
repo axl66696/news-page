@@ -4,7 +4,7 @@ import { UserProfile } from '../public-api';
 import { Observable, Subject, mergeMap } from 'rxjs';
 import { ConsumerMessages, JSONCodec, JetstreamWsService, SubscribeType } from '@his-base/jetstream-ws';
 import { News } from '@his-viewmodel/appportal/dist';
-import { Coding } from '@his-base/datatypes/dist';
+import { Coding } from '@his-base/datatypes';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,8 @@ export class NewsService {
   userProfile = signal<UserProfile>({} as UserProfile)
 
   news = signal<News[]>({} as News[])
+  allNormalNews = signal<News[]>({} as News[])
+  allTodoList = signal<News[]>({} as News[])
   normalNews = signal<News[]>({} as News[])
   toDoList = signal<News[]>({} as News[])
   checkedNormalNews = signal<News[]>({} as News[])
@@ -49,14 +51,20 @@ export class NewsService {
    * @param {News[]} news
    * @memberof NewsService
    */
-  getNewsFromNats(news:News[]): void {
-    this.news.set(news)
+  getNewsFromNats(): void {
+    this.#jetStreamWsService.publish("news.wantNews", {code:"Neo",display:"Neo"});
   }
 
-  setNews(){
+  setNews(): void{
     this.news.set(mockNews)
-    this.normalNews.set(this.getFilterNews("10"))
-    this.toDoList.set(this.getFilterNews("60"))
+    this.allNormalNews.set(this.getFilterNews("10"))
+    this.allTodoList.set(this.getFilterNews("60"))
+
+    this.normalNews.set(this.filterStatus(this.allNormalNews(),"10"))
+    this.toDoList.set(this.filterStatus(this.allTodoList(), "10"))
+    this.checkedNormalNews.set(this.filterStatus(this.allNormalNews(),"60"))
+    this.checkedToDoList.set(this.filterStatus(this.allTodoList(),"60"))
+
   }
 
   /** 依‘一般消息’、’待辦工作’分類最新消息
@@ -73,6 +81,23 @@ export class NewsService {
       return newsList
     }
   }
+
+  filterStatus(news:News[], code?:Coding['code']): News[]{
+    if(code){
+      return news.filter(m=>m.execStatus['code']==code)
+    }
+    else{
+      return news
+    }
+  }
+
+
+  filterOverdue(news:News[]): News[]{
+    const date = new Date
+    const aDay = 24*60*60*1000
+    return news.filter(m=>date.valueOf() - m.execTime.valueOf() < aDay)
+  }
+
 
   /** 訂閱最新消息
    * @memberof NewsService
@@ -103,11 +128,21 @@ export class NewsService {
       this.#userNews.subscribe((news: any) => {
         console.log("news", news)
         this.news.set(news);
-        this.normalNews.set(this.getFilterNews("10"))
-        this.toDoList.set(this.getFilterNews("60"))
+        // this.normalNews.set(this.getFilterNews("10"))
+        // this.toDoList.set(this.getFilterNews("60"))
+
+        this.allNormalNews.set(this.getFilterNews("10"))
+        this.allTodoList.set(this.getFilterNews("60"))
+
+        this.normalNews.set(this.filterStatus(this.allNormalNews(), "10"))
+        this.toDoList.set(this.filterStatus(this.allTodoList(),"10"))
+        this.checkedNormalNews.set(this.filterOverdue(this.filterStatus(this.allNormalNews(), "60")))
+        this.checkedToDoList.set(this.filterOverdue(this.filterStatus(this.allTodoList(), "60")))
         console.log("this.news()", this.news())
         console.log("this.normalNews()", this.normalNews())
         console.log("this.toDoListNews()", this.toDoList())
+        console.log("this.checkedNormalNews()", this.checkedNormalNews())
+        console.log("this.checkedToDoList()",this.checkedToDoList())
 
     });
 

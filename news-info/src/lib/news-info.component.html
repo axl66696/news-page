@@ -55,7 +55,7 @@
       <his-news-list
         [news]="normalNews()"
         class="news-container"
-        [customTemplate]="customTemplateAnnoucement"
+        [customTemplate]="customTemplateAnnouncement"
       ></his-news-list>
     </p-fieldset>
 
@@ -71,9 +71,9 @@
         </div>
       </ng-template>
       <his-news-list
-        [news]="normalNews()"
+        [news]="checkedToDoList()"
         class="news-container"
-        [customTemplate]="customTemplateCompleted"
+        [customTemplate]="customTemplateToDoListChecked"
       ></his-news-list>
     </p-fieldset>
 
@@ -89,9 +89,9 @@
         </div>
       </ng-template>
       <his-news-list
-        [news]="normalNews()"
+        [news]="checkedNormalNews()"
         class="news-container"
-        [customTemplate]="customTemplateCompleted"
+        [customTemplate]="customTemplateAnnouncementChecked"
       ></his-news-list>
     </p-fieldset>
   </div>
@@ -111,6 +111,8 @@
             type="button"
             label="完成"
             class="p-button-outlined"
+            (click)="onChangeStatus(news.userCode, news._id)"
+
           ></button>
         </td>
         <td>
@@ -129,7 +131,7 @@
   </p-table>
 </ng-template>
 
-<ng-template #customTemplateAnnoucement>
+<ng-template #customTemplateAnnouncement>
   <p-table
     [value]="normalNews()"
     [tableStyle]="{ width: '100%' }"
@@ -143,6 +145,7 @@
             type="button"
             label="已讀"
             class="p-button-outlined"
+            (click)="onChangeStatus(news.userCode, news._id)"
           ></button>
         </td>
         <td>{{ news.period.start.toLocaleString() }}</td>
@@ -159,9 +162,9 @@
   </p-table>
 </ng-template>
 
-<ng-template #customTemplateCompleted>
+<ng-template #customTemplateToDoListChecked>
   <p-table
-    [value]="normalNews()"
+    [value]="checkedToDoList()"
     [tableStyle]="{ width: '100%' }"
   >
     <ng-template pTemplate="body" let-news>
@@ -172,7 +175,26 @@
         </td>
         <td>
           <span>
-            <p-button #navButton i18n-label label="請點選進入" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
+          </span>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-template>
+
+<ng-template #customTemplateAnnouncementChecked>
+  <p-table
+    [value]="checkedNormalNews()"
+    [tableStyle]="{ width: '100%' }"
+  >
+    <ng-template pTemplate="body" let-news>
+      <tr>
+        <td>{{ news.period.start.toLocaleString() }}</td>
+        <td>
+          <span class="label-m">{{ news.subject }}</span>
+        </td>
+        <td>
+          <span>
           </span>
         </td>
       </tr>
