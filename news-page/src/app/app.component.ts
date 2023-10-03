@@ -3,7 +3,7 @@ import { NewsService } from './../../../news-info/src/lib/news.service';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { NewsInfoComponent, UserProfileService } from 'news-info';
+import { NewsInfoComponent } from 'news-info';
 import { NewsListComponent } from 'news-info';
 import { UserProfile } from '../../../news-info/src/public-api';
 import { Coding } from '@his-base/datatypes';

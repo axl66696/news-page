@@ -1,13 +1,11 @@
-import { UserProfile } from '../public-api';
 import { News } from '@his-viewmodel/appportal/dist';
 import { Coding } from '@his-base/datatypes';
 import * as i0 from "@angular/core";
 export declare class NewsService {
     #private;
-    /** 使用Signal變數儲存UserProfile型別的使用者資訊
-     * @memberof NewsService
+    /** 使用Signal變數儲存各最新消息的資訊
+     *  @memberof NewsService
      */
-    userProfile: import("@angular/core").WritableSignal<UserProfile>;
     news: import("@angular/core").WritableSignal<News[]>;
     allNormalNews: import("@angular/core").WritableSignal<News[]>;
     allTodoList: import("@angular/core").WritableSignal<News[]>;
@@ -15,23 +13,42 @@ export declare class NewsService {
     toDoList: import("@angular/core").WritableSignal<News[]>;
     checkedNormalNews: import("@angular/core").WritableSignal<News[]>;
     checkedToDoList: import("@angular/core").WritableSignal<News[]>;
+    /** 建立nats連線
+     *  @memberof NewsService
+     */
     connect(): Promise<void>;
+    /** 中斷nats連線
+     *  @memberof NewsService
+     */
     disconnect(): Promise<void>;
-    /** 更新最新消息
-     * @param {News[]} news
-     * @memberof NewsService
+    /** 依userCode初始化最新消息
+     *  @memberof NewsService
      */
-    getNewsFromNats(): void;
-    setNews(): void;
+    getInitNews(userCode: Coding): void;
+    /** 發送`最新消息狀態改為已讀/已完成`到nats
+     *  @memberof NewsService
+     */
+    changeStatus(userCode: Coding, newsId: string): void;
+    /** 最新消息更新時設定所有Signal
+     *  @memberof NewsService
+     */
+    setNews(news: News[]): void;
     /** 依‘一般消息’、’待辦工作’分類最新消息
-     * @param {Coding} type
-     * @return {News[]}
-     * @memberof NewsService
+     *  @memberof NewsService
      */
-    getFilterNews(code?: Coding['code']): News[];
-    filterStatus(news: News[], code?: Coding['code']): News[];
-    filterOverdue(news: News[]): News[];
-    showDate(): void;
+    filterType(code?: Coding['code']): News[];
+    /** 依`已讀/已完成`、`未讀/未完成`分類最新消息
+     *  @memberof NewsService
+     */
+    filterStatus(newsList: News[], code?: Coding['code']): News[];
+    /** 僅顯示未超過24小時的已讀一般消息/待辦工作
+     *  @memberof NewsService
+     */
+    filterOverdue(newsList: News[]): News[];
+    /** 規格化從nats取得的最新消息
+     *  @memberof NewsService
+     */
+    formatNews(newsList: News[]): News[];
     /** 訂閱最新消息
      * @memberof NewsService
      */
@@ -39,4 +56,3 @@ export declare class NewsService {
     static ɵfac: i0.ɵɵFactoryDeclaration<NewsService, never>;
     static ɵprov: i0.ɵɵInjectableDeclaration<NewsService>;
 }
-export declare const mockNews: News[];

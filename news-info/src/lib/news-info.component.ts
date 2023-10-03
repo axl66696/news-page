@@ -12,6 +12,7 @@ import { UserProfile } from '../public-api';
 import { Coding } from '@his-base/datatypes';
 import { News } from '@his-viewmodel/appportal/dist'
 import { JetstreamWsService } from '@his-base/jetstream-ws';
+import { MockUserService } from './mock-user.service';
 
 @Component({
   selector: 'his-news-info',
@@ -22,10 +23,10 @@ import { JetstreamWsService } from '@his-base/jetstream-ws';
 })
 export class NewsInfoComponent implements OnInit{
 
-  /** 使用Signal變數儲存UserProfile型別的使用者資訊
-   * @memberof NewsInfoComponent
-   */
 
+  /** 使用Signal變數儲存各最新消息的資訊
+   *  @memberof NewsInfoComponent
+   */
   news = computed(() => this.newsService.news());
   normalNews = computed(() => this.newsService.normalNews());
   toDoList = computed(() => this.newsService.toDoList());
@@ -33,49 +34,39 @@ export class NewsInfoComponent implements OnInit{
   checkedToDoList = computed(()=>this.newsService.checkedToDoList())
 
   newsService = inject(NewsService)
+  mockUserService = inject(MockUserService)
   #jetStreamWsService = inject(JetstreamWsService);
   #router = inject(Router)
 
 
   /** 初始化使用者資訊
-   * @memberof NewsInfoComponent
+   *  @memberof NewsInfoComponent
    */
   async ngOnInit() {
-
-    // this.newsService.setNews();
     await this.newsService.connect();
     await this.newsService.subNews()
-    await this.newsService.getNewsFromNats();
-    console.log("newsService userNews", this.newsService.news)
-    console.log("newsInfo news", this.news())
-    console.log("公告消息", this.normalNews)
-    console.log("待辦工作", this.toDoList)
-
-
-
+    this.newsService.getInitNews(this.mockUserService.mockUserCode);
   }
 
   /** 跳轉到上一頁
-   * @memberof NewsInfoComponent
+   *  @memberof NewsInfoComponent
    */
   onBackClick() {
     window.history.back()
   }
 
   /** 跳轉到appUrl路徑的位置，並附帶傳送的資訊
-   * @param {string} appUrl
-   * @param {object} sharedData
-   * @memberof NewsInfoComponent
+   *  @memberof NewsInfoComponent
    */
   onNavNewsClick(appUrl:string, sharedData:object){
-    alert(`導向到 -------> ${appUrl}token值：${sharedData}`)
     this.#router.navigate([appUrl],{state:sharedData})
   }
 
+  /** 發送`最新消息狀態改為已讀/已完成`到nats
+   *  @memberof NewsInfoComponent
+   */
   async onChangeStatus(userCode:Coding, newsId:string){
-    const date = new Date()
-    console.log("目前時間", date)
-    await this.#jetStreamWsService.publish("news.updateStatus", {userCode, newsId, date})
+    this.newsService.changeStatus(userCode, newsId)
   }
 
 }
