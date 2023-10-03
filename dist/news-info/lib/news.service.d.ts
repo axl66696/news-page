@@ -31,6 +31,7 @@ export declare class NewsService {
     getFilterNews(code?: Coding['code']): News[];
     filterStatus(news: News[], code?: Coding['code']): News[];
     filterOverdue(news: News[]): News[];
+    showDate(): void;
     /** 訂閱最新消息
      * @memberof NewsService
      */

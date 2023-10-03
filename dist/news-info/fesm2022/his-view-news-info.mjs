@@ -281,7 +281,17 @@ class NewsService {
     filterOverdue(news) {
         const date = new Date;
         const aDay = 24 * 60 * 60 * 1000;
-        return news.filter(m => date.valueOf() - m.execTime.valueOf() < aDay);
+        return news.filter(newsData => date.valueOf() - newsData.execTime.valueOf() < aDay);
+    }
+    showDate() {
+        const nowDate = new Date();
+        console.log("現在時間", nowDate);
+        console.log("最新消息0", this.news());
+        console.log("最新消息0time", this.news()[0].execTime);
+        console.log("最新消息4timetype", typeof this.news()[4].execTime);
+        console.log(nowDate.valueOf());
+        console.log(this.news()[0].execTime.valueOf());
+        console.log("相減", (nowDate.valueOf() - this.news()[0].execTime.valueOf()) / (1000 * 60 * 60 * 24));
     }
     /** 訂閱最新消息
      * @memberof NewsService
@@ -301,11 +311,34 @@ class NewsService {
             }
         }))
             .subscribe(() => { });
-        this.#userNews.subscribe((news) => {
-            console.log("news", news);
-            this.news.set(news);
+        this.#userNews.subscribe((newsList) => {
+            const tmpNews = [];
+            newsList.forEach((news) => {
+                const tmp = {
+                    "_id": news._id,
+                    "appId": news.appId,
+                    "userCode": news.userCode,
+                    "subject": news.subject,
+                    "url": news.url,
+                    "sharedData": news.sharedData,
+                    "period": {
+                        "start": new Date(news.period.start),
+                        "end": new Date(news.period.end)
+                    },
+                    "type": news.type,
+                    "execTime": new Date(news.execTime),
+                    "execStatus": news.execStatus,
+                    "updatedBy": news.updatedBy,
+                    "updatedAt": new Date(news.updatedAt)
+                };
+                tmpNews.push(tmp);
+            });
+            console.log("news", tmpNews);
+            this.news.set(tmpNews);
             // this.normalNews.set(this.getFilterNews("10"))
             // this.toDoList.set(this.getFilterNews("60"))
+            console.log("execTime", this.news()[0].execTime);
+            console.log("execTime type", typeof this.news()[0].execTime);
             this.allNormalNews.set(this.getFilterNews("10"));
             this.allTodoList.set(this.getFilterNews("60"));
             this.normalNews.set(this.filterStatus(this.allNormalNews(), "10"));
@@ -317,6 +350,7 @@ class NewsService {
             console.log("this.toDoListNews()", this.toDoList());
             console.log("this.checkedNormalNews()", this.checkedNormalNews());
             console.log("this.checkedToDoList()", this.checkedToDoList());
+            this.showDate();
         });
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.6", ngImport: i0, type: NewsService, deps: [], target: i0.ɵɵFactoryTarget.Injectable }); }
@@ -468,7 +502,7 @@ class NewsInfoComponent {
      * @memberof NewsInfoComponent
      */
     async ngOnInit() {
-        this.newsService.setNews();
+        // this.newsService.setNews();
         await this.newsService.connect();
         await this.newsService.subNews();
         await this.newsService.getNewsFromNats();
@@ -476,7 +510,6 @@ class NewsInfoComponent {
         console.log("newsInfo news", this.news());
         console.log("公告消息", this.normalNews);
         console.log("待辦工作", this.toDoList);
-        console.log("現在時間", new Date);
     }
     /** 跳轉到上一頁
      * @memberof NewsInfoComponent
@@ -494,7 +527,8 @@ class NewsInfoComponent {
         this.#router.navigate([appUrl], { state: sharedData });
     }
     async onChangeStatus(userCode, newsId) {
-        const date = new Date;
+        const date = new Date();
+        console.log("目前時間", date);
         await this.#jetStreamWsService.publish("news.updateStatus", { userCode, newsId, date });
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.2.6", ngImport: i0, type: NewsInfoComponent, deps: [], target: i0.ɵɵFactoryTarget.Component }); }

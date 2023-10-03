@@ -7,7 +7,6 @@ import { TableModule } from 'primeng/table';
 import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
 import { Router, RouterOutlet } from '@angular/router';
-import { UserProfileService } from './user-profile.service';
 import { AvatarModule } from 'primeng/avatar';
 import { UserProfile } from '../public-api';
 import { Coding } from '@his-base/datatypes';
@@ -43,7 +42,7 @@ export class NewsInfoComponent implements OnInit{
    */
   async ngOnInit() {
 
-    this.newsService.setNews();
+    // this.newsService.setNews();
     await this.newsService.connect();
     await this.newsService.subNews()
     await this.newsService.getNewsFromNats();
@@ -51,7 +50,9 @@ export class NewsInfoComponent implements OnInit{
     console.log("newsInfo news", this.news())
     console.log("公告消息", this.normalNews)
     console.log("待辦工作", this.toDoList)
-    console.log("現在時間", new Date)
+
+
+
   }
 
   /** 跳轉到上一頁
@@ -72,133 +73,9 @@ export class NewsInfoComponent implements OnInit{
   }
 
   async onChangeStatus(userCode:Coding, newsId:string){
-    const date = new Date
+    const date = new Date()
+    console.log("目前時間", date)
     await this.#jetStreamWsService.publish("news.updateStatus", {userCode, newsId, date})
   }
 
 }
-
-// export const mockNews:News[] =[
-//   {
-//     "_id": "64f1968af80caa4450a1d218",
-//     "appId": "001-app_id",
-//     "userCode": {
-//       "code" : "001-app_id",
-//       "display" : "001-app_id"
-//     },
-//     "subject": "員工健康檢查通知",
-//     "url": "https://www.hpc.tw",
-//     "sharedData": {},
-//     "period": {
-//       "start": new Date("1990-06-15T00:00"),
-//       "end": new Date("2229-12-31T23:59")
-//     },
-//     "type": {
-//       "code":"10",
-//       "display":"一般消息"
-//     },
-//     "execTime": new Date("2023-09-27T14:00"),
-//     "execStatus": {
-//       "code" : "60",
-//       "display" : "已讀/已完成"
-//     }
-//     ,
-//     "updatedBy": {
-//       "code" : "alphaTeam",
-//       "display" : "alphaTeam"
-//     },
-//     "updatedAt": new Date("1990-06-15T00:00")
-//   },
-//   {
-//     "_id": "64f1968af80caa4450a1d219",
-//     "appId": "002-app_id",
-//     "userCode": {
-//       "code" : "001-app_id",
-//       "display" : "001-app_id"
-//     },
-//     "subject": "您有1筆公文待簽核",
-//     "url": "https://www.hpc.tw",
-//     "sharedData": {},
-//     "period": {
-//       "start": new Date("1990-06-15T00:00"),
-//       "end": new Date("2229-12-31T23:59")
-//     },
-//     "type": {
-//       "code":"60",
-//       "display":"待辦工作"
-//     },
-//     "execTime": new Date("2023-09-27T14:00"),
-//     "execStatus": {
-//       "code" : "60",
-//       "display" : "已讀/已完成"
-//     }
-//     ,
-//     "updatedBy": {
-//       "code" : "alphaTeam",
-//       "display" : "alphaTeam"
-//     },
-//     "updatedAt": new Date("1990-06-15T00:00")
-//   },
-//   {
-//     "_id": "64f1968af80caa4450a1d21a",
-//     "appId": "001-app_id",
-//     "userCode": {
-//       "code" : "002-userCode",
-//       "display" : "002-userCode"
-//     },
-//     "subject": "員工健康檢查通知",
-//     "url": "https://www.hpc.tw",
-//     "sharedData": {},
-//     "period": {
-//       "start": new Date("1990-06-15T00:00"),
-//       "end": new Date("2229-12-31T23:59")
-//     },
-//     "type": {
-//       "code":"10",
-//       "display":"一般消息"
-//     },
-//     "execTime": new Date("2023-09-27T14:00"),
-//     "execStatus": {
-//       "code" : "60",
-//       "display" : "已讀/已完成"
-//     }
-//     ,
-//     "updatedBy": {
-//       "code" : "alphaTeam",
-//       "display" : "alphaTeam"
-//     },
-//     "updatedAt": new Date("1990-06-15T00:00")
-//   },
-//   {
-//     "_id": "64f1968af80caa4450a1d21b",
-//     "appId": "002-app_id",
-//     "userCode": {
-//       "code" : "002-userCode",
-//       "display" : "002-userCode"
-//     },
-//     "subject": "您有2筆公文待簽核",
-//     "url": "https://www.hpc.tw",
-//     "sharedData": {},
-//     "period": {
-//       "start": new Date("1990-06-15T00:00"),
-//       "end": new Date("2229-12-31T23:59")
-//     },
-//     "type": {
-//       "code":"60",
-//       "display":"待辦工作"
-//     },
-//     "execTime": new Date("2023-09-27T14:00"),
-//     "execStatus": {
-//       "code" : "60",
-//       "display" : "已讀/已完成"
-//     }
-//     ,
-//     "updatedBy": {
-//       "code" : "alphaTeam",
-//       "display" : "alphaTeam"
-//     },
-//     "updatedAt": new Date("1990-06-15T00:00")
-//   }
-// ];
-
-

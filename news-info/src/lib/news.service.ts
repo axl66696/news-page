@@ -56,9 +56,8 @@ export class NewsService {
   }
 
   setNews(): void{
-    this.news.set(mockNews)
-    this.allNormalNews.set(this.getFilterNews("10"))
-    this.allTodoList.set(this.getFilterNews("60"))
+    this.allNormalNews.set(this.filterType("10"))
+    this.allTodoList.set(this.filterType("60"))
 
     this.normalNews.set(this.filterStatus(this.allNormalNews(),"10"))
     this.toDoList.set(this.filterStatus(this.allTodoList(), "10"))
@@ -72,7 +71,7 @@ export class NewsService {
    * @return {News[]}
    * @memberof NewsService
    */
-  getFilterNews(code?:Coding['code']): News[]{
+  filterType(code?:Coding['code']): News[]{
     const newsList=this.news()
     if(code){
       return this.news().filter(m=>m.type['code']==code)
@@ -95,7 +94,18 @@ export class NewsService {
   filterOverdue(news:News[]): News[]{
     const date = new Date
     const aDay = 24*60*60*1000
-    return news.filter(m=>date.valueOf() - m.execTime.valueOf() < aDay)
+    return news.filter(newsData=>date.valueOf() - newsData.execTime.valueOf() < aDay)
+  }
+
+  showDate(){
+    const nowDate = new Date()
+    console.log("現在時間", nowDate)
+    console.log("最新消息0",this.news())
+    console.log("最新消息0time", this.news()[0].execTime)
+    console.log("最新消息4timetype", typeof this.news()[4].execTime)
+    console.log(nowDate.valueOf())
+    console.log(this.news()[0].execTime.valueOf())
+    console.log("相減", (nowDate.valueOf() - this.news()[0].execTime.valueOf())/(1000*60*60*24))
   }
 
 
@@ -125,14 +135,40 @@ export class NewsService {
       .subscribe(() => {});
 
 
-      this.#userNews.subscribe((news: any) => {
-        console.log("news", news)
-        this.news.set(news);
+      this.#userNews.subscribe((newsList:any) => {
+        const tmpNews:News[] = []
+        newsList.forEach((news: News) => {
+          const tmp:News = {
+            "_id": news._id,
+            "appId": news.appId,
+            "userCode": news.userCode,
+            "subject": news.subject,
+            "url": news.url,
+            "sharedData": news.sharedData,
+            "period": {
+              "start": new Date(news.period.start),
+              "end": new Date(news.period.end)
+            },
+            "type": news.type,
+            "execTime": new Date(news.execTime),
+            "execStatus": news.execStatus,
+            "updatedBy": news.updatedBy,
+            "updatedAt": new Date(news.updatedAt)
+          }
+          tmpNews.push(tmp)
+        });
+
+
+        console.log("news", tmpNews)
+        this.news.set(tmpNews as News[]);
         // this.normalNews.set(this.getFilterNews("10"))
         // this.toDoList.set(this.getFilterNews("60"))
+        console.log("execTime", this.news()[0].execTime)
+        console.log("execTime type", typeof this.news()[0].execTime)
 
-        this.allNormalNews.set(this.getFilterNews("10"))
-        this.allTodoList.set(this.getFilterNews("60"))
+
+        this.allNormalNews.set(this.filterType("10"))
+        this.allTodoList.set(this.filterType("60"))
 
         this.normalNews.set(this.filterStatus(this.allNormalNews(), "10"))
         this.toDoList.set(this.filterStatus(this.allTodoList(),"10"))
@@ -143,132 +179,10 @@ export class NewsService {
         console.log("this.toDoListNews()", this.toDoList())
         console.log("this.checkedNormalNews()", this.checkedNormalNews())
         console.log("this.checkedToDoList()",this.checkedToDoList())
+        this.showDate()
 
     });
 
   }
 
 }
-
-export const mockNews:News[] =[
-  {
-    "_id": "64f1968af80caa4450a1d218",
-    "appId": "001-app_id",
-    "userCode": {
-      "code" : "Neo",
-      "display" : "Neo"
-    },
-    "subject": "員工健康檢查通知",
-    "url": "https://www.hpc.tw",
-    "sharedData": {},
-    "period": {
-      "start": new Date("1990-06-15T00:00"),
-      "end": new Date("2229-12-31T23:59")
-    },
-    "type": {
-      "code":"10",
-      "display":"一般消息"
-    },
-    "execTime": new Date("2023-09-27T14:00"),
-    "execStatus": {
-      "code" : "60",
-      "display" : "已讀/已完成"
-    }
-    ,
-    "updatedBy": {
-      "code" : "alphaTeam",
-      "display" : "alphaTeam"
-    },
-    "updatedAt": new Date("1990-06-15T00:00")
-  },
-  {
-    "_id": "64f1968af80caa4450a1d219",
-    "appId": "002-app_id",
-    "userCode": {
-      "code" : "Neo",
-      "display" : "Neo"
-    },
-    "subject": "您有1筆公文待簽核",
-    "url": "https://www.hpc.tw",
-    "sharedData": {},
-    "period": {
-      "start": new Date("1990-06-15T00:00"),
-      "end": new Date("2229-12-31T23:59")
-    },
-    "type": {
-      "code":"60",
-      "display":"待辦工作"
-    },
-    "execTime": new Date("2023-09-27T14:00"),
-    "execStatus": {
-      "code" : "60",
-      "display" : "已讀/已完成"
-    }
-    ,
-    "updatedBy": {
-      "code" : "alphaTeam",
-      "display" : "alphaTeam"
-    },
-    "updatedAt": new Date("1990-06-15T00:00")
-  },
-  {
-    "_id": "64f1968af80caa4450a1d21a",
-    "appId": "001-app_id",
-    "userCode": {
-      "code" : "Tommy",
-      "display" : "Tommy"
-    },
-    "subject": "員工健康檢查通知",
-    "url": "https://www.hpc.tw",
-    "sharedData": {},
-    "period": {
-      "start": new Date("1990-06-15T00:00"),
-      "end": new Date("2229-12-31T23:59")
-    },
-    "type": {
-      "code":"10",
-      "display":"一般消息"
-    },
-    "execTime": new Date("2023-09-27T14:00"),
-    "execStatus": {
-      "code" : "60",
-      "display" : "已讀/已完成"
-    }
-    ,
-    "updatedBy": {
-      "code" : "alphaTeam",
-      "display" : "alphaTeam"
-    },
-    "updatedAt": new Date("1990-06-15T00:00")
-  },
-  {
-    "_id": "64f1968af80caa4450a1d21b",
-    "appId": "002-app_id",
-    "userCode": {
-      "code" : "Tommy",
-      "display" : "Tommy"
-    },
-    "subject": "您有2筆公文待簽核",
-    "url": "https://www.hpc.tw",
-    "sharedData": {},
-    "period": {
-      "start": new Date("1990-06-15T00:00"),
-      "end": new Date("2229-12-31T23:59")
-    },
-    "type": {
-      "code":"60",
-      "display":"待辦工作"
-    },
-    "execTime": new Date("2023-09-27T14:00"),
-    "execStatus": {
-      "code" : "60",
-      "display" : "已讀/已完成"
-    }
-    ,
-    "updatedBy": {
-      "code" : "alphaTeam",
-      "display" : "alphaTeam"
-    },
-    "updatedAt": new Date("1990-06-15T00:00")
-  }
-];
