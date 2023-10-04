@@ -1,22 +1,29 @@
-import { OnInit } from '@angular/core';
+import { OnInit, OnDestroy } from '@angular/core';
 import { NewsService } from './news.service';
 import { Coding } from '@his-base/datatypes';
-import { News } from '@his-viewmodel/appportal/dist';
-import { MockUserService } from './mock-user.service';
+import { HttpClient } from '@angular/common/http';
 import * as i0 from "@angular/core";
-export declare class NewsInfoComponent implements OnInit {
+export declare class NewsInfoComponent implements OnInit, OnDestroy {
     #private;
-    /** 使用Signal變數儲存各最新消息的資訊
+    private http;
+    /** 使用computed變數儲存各最新消息的資訊
      *  @memberof NewsInfoComponent
      */
-    news: import("@angular/core").Signal<News[]>;
-    normalNews: import("@angular/core").Signal<News[]>;
-    toDoList: import("@angular/core").Signal<News[]>;
-    checkedNormalNews: import("@angular/core").Signal<News[]>;
-    checkedToDoList: import("@angular/core").Signal<News[]>;
+    news: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
+    normalNews: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
+    toDoList: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
+    checkedNormalNews: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
+    checkedToDoList: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
+    /** userCode假資料
+     *  @memberof NewsInfoComponent
+     */
+    mockUserCode: Coding;
     newsService: NewsService;
-    mockUserService: MockUserService;
-    /** 初始化使用者資訊
+    /** HttpClient引入假userCode
+     *  @memberof NewsInfoComponent
+     */
+    constructor(http: HttpClient);
+    /** 建立連線、訂閱最新消息、初始化最新消息
      *  @memberof NewsInfoComponent
      */
     ngOnInit(): Promise<void>;
@@ -32,6 +39,10 @@ export declare class NewsInfoComponent implements OnInit {
      *  @memberof NewsInfoComponent
      */
     onChangeStatus(userCode: Coding, newsId: string): Promise<void>;
+    /** 清除連線
+     *  @memberof NewsInfoCoponent
+     */
+    ngOnDestroy(): Promise<void>;
     static ɵfac: i0.ɵɵFactoryDeclaration<NewsInfoComponent, never>;
     static ɵcmp: i0.ɵɵComponentDeclaration<NewsInfoComponent, "his-news-info", never, {}, {}, never, never, true, never>;
 }

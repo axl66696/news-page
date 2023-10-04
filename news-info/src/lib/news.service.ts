@@ -10,23 +10,23 @@ import { Coding } from '@his-base/datatypes';
 })
 export class NewsService {
 
+  /** 使用Signal變數儲存各類型最新消息的資訊
+   *  @memberof NewsService
+   */
+  news = signal<News[]>({} as News[]);
+  allNormalNews = signal<News[]>({} as News[]);
+  allTodoList = signal<News[]>({} as News[]);
+  normalNews = signal<News[]>({} as News[]);
+  toDoList = signal<News[]>({} as News[]);
+  checkedNormalNews = signal<News[]>({} as News[]);
+  checkedToDoList = signal<News[]>({} as News[]);
+
   /** nats連線位址
    *  @memberof NewsService
    */
   #url = 'ws://localhost:8080';
 
-  /** 使用Signal變數儲存各最新消息的資訊
-   *  @memberof NewsService
-   */
-  news = signal<News[]>({} as News[])
-  allNormalNews = signal<News[]>({} as News[])
-  allTodoList = signal<News[]>({} as News[])
-  normalNews = signal<News[]>({} as News[])
-  toDoList = signal<News[]>({} as News[])
-  checkedNormalNews = signal<News[]>({} as News[])
-  checkedToDoList = signal<News[]>({} as News[])
-
-  /** 使用Subject變數自nats拿取包含最新消息的使用者資訊
+  /** 使用Subject變數自nats拿取最新消息
    *  @memberof NewsService
    */
   #userNews = new Subject();
@@ -52,10 +52,10 @@ export class NewsService {
     await this.#jetStreamWsService.drain();
   }
 
-  /** 依userCode初始化最新消息
+  /** publish userCode到nats
    *  @memberof NewsService
    */
-  getInitNews(userCode:Coding): void {
+  publishUserCode(userCode:Coding): void {
     this.#jetStreamWsService.publish("news.wantNews", userCode);
   }
 
@@ -63,46 +63,32 @@ export class NewsService {
    *  @memberof NewsService
    */
   changeStatus(userCode:Coding, newsId:string){
-    const date = new Date()
-    this.#jetStreamWsService.publish("news.updateStatus", {userCode, newsId, date})
-  }
-
-  /** 最新消息更新時設定所有Signal
-   *  @memberof NewsService
-   */
-  setNews(news:News[]): void{
-    this.news.set(news as News[]);
-    this.allNormalNews.set(this.filterType("10"))
-    this.allTodoList.set(this.filterType("60"))
-    this.normalNews.set(this.filterStatus(this.allNormalNews(), "10"))
-    this.toDoList.set(this.filterStatus(this.allTodoList(),"10"))
-    this.checkedNormalNews.set(this.filterOverdue(this.filterStatus(this.allNormalNews(), "60")))
-    this.checkedToDoList.set(this.filterOverdue(this.filterStatus(this.allTodoList(), "60")))
-
+    const date = new Date();
+    this.#jetStreamWsService.publish("news.updateStatus", {userCode, newsId, date});
   }
 
   /** 依‘一般消息’、’待辦工作’分類最新消息
    *  @memberof NewsService
    */
-  filterType(code?:Coding['code']): News[]{
-    const newsList=this.news()
+  filterType(code:Coding['code']): News[]{
+    const newsList=this.news();
     if(code){
-      return this.news().filter(newsData=>newsData.type['code']==code)
+      return this.news().filter(newsData=>newsData.type['code']==code);
     }
     else{
-      return newsList
+      return newsList;
     }
   }
 
   /** 依`已讀/已完成`、`未讀/未完成`分類最新消息
    *  @memberof NewsService
    */
-  filterStatus(newsList:News[], code?:Coding['code']): News[]{
+  filterStatus(newsList:News[], code:Coding['code']): News[]{
     if(code){
-      return newsList.filter(newsData=>newsData.execStatus['code']==code)
+      return newsList.filter(newsData=>newsData.execStatus['code']==code);
     }
     else{
-      return newsList
+      return newsList;
     }
   }
 
@@ -110,9 +96,22 @@ export class NewsService {
    *  @memberof NewsService
    */
   filterOverdue(newsList:News[]): News[]{
-    const date = new Date
-    const aDay = 24*60*60*1000
-    return newsList.filter(newsData=>date.valueOf() - newsData.execTime.valueOf() < aDay)
+    const date = new Date;
+    const aDay = 24*60*60*1000;
+    return newsList.filter(newsData=>date.valueOf() - newsData.execTime.valueOf() < aDay);
+  }
+
+  /** 最新消息更新時設定所有Signal
+   *  @memberof NewsService
+   */
+  setNews(news:News[]): void{
+    this.news.set(news as News[]);
+    this.allNormalNews.set(this.filterType("10"));
+    this.allTodoList.set(this.filterType("60"));
+    this.normalNews.set(this.filterStatus(this.allNormalNews(), "10"));
+    this.toDoList.set(this.filterStatus(this.allTodoList(),"10"));
+    this.checkedNormalNews.set(this.filterOverdue(this.filterStatus(this.allNormalNews(), "60")));
+    this.checkedToDoList.set(this.filterOverdue(this.filterStatus(this.allTodoList(), "60")));
   }
 
   /** 規格化從nats取得的最新消息
@@ -137,16 +136,16 @@ export class NewsService {
           "execStatus": news.execStatus,
           "updatedBy": news.updatedBy,
           "updatedAt": new Date(news.updatedAt)
-        }
+        };
         formatNewsList.push(formatNewsData);
       });
-    return formatNewsList
+    return formatNewsList;
   }
 
   /** 訂閱最新消息
    * @memberof NewsService
    */
-  async subNews() {
+  async subNews(): Promise<void> {
     this.#userNews = new Subject();
     const jsonCodec = JSONCodec();
     this.#consumerMessages$ = this.#jetStreamWsService.subscribe(

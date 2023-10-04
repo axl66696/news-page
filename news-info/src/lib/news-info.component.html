@@ -7,7 +7,7 @@
         size="xlarge"
         shape="circle"
       ></p-avatar>
-      <div class="title" i18n>歡迎回來</div>
+      <div class="title" [innerText]="'greeting'|translate"></div>
   </div>
   <div class="toolbar-container">
       <div class="icon-container">
@@ -19,11 +19,11 @@
           class="p-button-rounded p-button-secondary p-button-outlined"
           (click)="onBackClick()"
         ></button>
-        <div><h3 class="" i18n>最新消息</h3></div>
+        <div><h3 [innerText]="'latestNews'|translate"></h3></div>
       </div>
   </div>
   <div class="flex flex-column">
-    <p-fieldset legend="待辦工作" [toggleable]="true" class="first">
+    <p-fieldset [legend]="'todolist'|translate" [toggleable]="true" class="first">
       <ng-template pTemplate="expandicon">
         <div >
           <span class="pi pi-chevron-down"></span>
@@ -41,7 +41,7 @@
       ></his-news-list>
     </p-fieldset>
 
-    <p-fieldset legend="公告訊息" [toggleable]="true" class="second">
+    <p-fieldset [legend]="'normalNews'|translate" [toggleable]="true" class="second">
       <ng-template pTemplate="expandicon">
         <div>
           <span class="pi pi-chevron-down"></span>
@@ -59,7 +59,7 @@
       ></his-news-list>
     </p-fieldset>
 
-    <p-fieldset legend="完成工作" [toggleable]="true" class="third">
+    <p-fieldset [legend]="'checkedToDoList'|translate" [toggleable]="true" class="third">
       <ng-template pTemplate="expandicon">
         <div>
           <span class="pi pi-chevron-down"></span>
@@ -77,7 +77,7 @@
       ></his-news-list>
     </p-fieldset>
 
-    <p-fieldset legend="已讀訊息" [toggleable]="true" class="fourth">
+    <p-fieldset [legend]="'checkedNormalNews'|translate" [toggleable]="true" class="fourth">
       <ng-template pTemplate="expandicon">
         <div>
           <span class="pi pi-chevron-down"></span>
@@ -109,7 +109,7 @@
             pButton
             pRipple
             type="button"
-            label="完成"
+            [label]="'complete' |translate"
             class="p-button-outlined"
             (click)="onChangeStatus(news.userCode, news._id)"
 
@@ -123,7 +123,7 @@
         </td>
         <td>
           <span>
-            <p-button #navButton i18n-label label="請點選進入" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
+            <p-button #navButton [label]="'clickToEnter'|translate" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
           </span>
         </td>
       </tr>
@@ -143,7 +143,7 @@
             pButton
             pRipple
             type="button"
-            label="已讀"
+            [label]="'checked'|translate"
             class="p-button-outlined"
             (click)="onChangeStatus(news.userCode, news._id)"
           ></button>
@@ -154,7 +154,7 @@
         </td>
         <td>
           <span>
-            <p-button #navButton i18n-label label="請點選進入" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
+            <p-button #navButton [label]="'clickToEnter'|translate" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
           </span>
         </td>
       </tr>

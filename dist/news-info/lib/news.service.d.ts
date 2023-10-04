@@ -3,7 +3,7 @@ import { Coding } from '@his-base/datatypes';
 import * as i0 from "@angular/core";
 export declare class NewsService {
     #private;
-    /** 使用Signal變數儲存各最新消息的資訊
+    /** 使用Signal變數儲存各類型最新消息的資訊
      *  @memberof NewsService
      */
     news: import("@angular/core").WritableSignal<News[]>;
@@ -21,18 +21,14 @@ export declare class NewsService {
      *  @memberof NewsService
      */
     disconnect(): Promise<void>;
-    /** 依userCode初始化最新消息
+    /** publish userCode到nats
      *  @memberof NewsService
      */
-    getInitNews(userCode: Coding): void;
+    publishUserCode(userCode: Coding): void;
     /** 發送`最新消息狀態改為已讀/已完成`到nats
      *  @memberof NewsService
      */
     changeStatus(userCode: Coding, newsId: string): void;
-    /** 最新消息更新時設定所有Signal
-     *  @memberof NewsService
-     */
-    setNews(news: News[]): void;
     /** 依‘一般消息’、’待辦工作’分類最新消息
      *  @memberof NewsService
      */
@@ -45,6 +41,10 @@ export declare class NewsService {
      *  @memberof NewsService
      */
     filterOverdue(newsList: News[]): News[];
+    /** 最新消息更新時設定所有Signal
+     *  @memberof NewsService
+     */
+    setNews(news: News[]): void;
     /** 規格化從nats取得的最新消息
      *  @memberof NewsService
      */
