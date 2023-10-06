@@ -18,7 +18,7 @@ import { SharedService } from '@his-base/shared';
   selector: 'his-news-info',
   standalone: true,
   imports: [CommonModule, NewsListComponent, TableModule, FieldsetModule, ButtonModule, AvatarModule, RouterOutlet,TranslateModule],
-  templateUrl: './news-info.component2.html',
+  templateUrl: './news-info.component.html',
   styleUrls: ['./news-info.component.scss']
 })
 export class NewsInfoComponent implements OnInit, OnDestroy{
@@ -42,6 +42,16 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   sharedService = inject(SharedService);
   httpClient = inject(HttpClient)
   #router = inject(Router);
+
+  /** HttpClient引入假userCode
+   *  @memberof NewsInfoComponent
+   */
+  constructor(private http:HttpClient){
+    http.get('http://localhost:4321/assets/mockUserCode/mockUserCode.json')
+        .subscribe(userCode => {
+          this.userCode = userCode as Coding;
+        })
+  }
 
   /** 建立連線、訂閱最新消息、初始化最新消息
    *  @memberof NewsInfoComponent
