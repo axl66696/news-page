@@ -34,7 +34,7 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   checkedNormalNews = computed(() => this.newsService.checkedNormalNews());
   checkedToDoList = computed(()=>this.newsService.checkedToDoList());
 
-  /** userCode假資料
+  /** userCode測試資料
    *  @memberof NewsInfoComponent
    */
   mockUserCode!:Coding
@@ -44,7 +44,7 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   #jetStreamWsService = inject(JetstreamWsService);
   #router = inject(Router);
 
-  /** HttpClient引入假userCode
+  /** HttpClient引入userCode測試資料
    *  @memberof NewsInfoComponent
    */
   constructor(private http:HttpClient){
