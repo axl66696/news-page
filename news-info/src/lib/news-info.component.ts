@@ -19,7 +19,7 @@ import { SharedService } from '@his-base/shared';
   selector: 'his-news-info',
   standalone: true,
   imports: [CommonModule, NewsListComponent, TableModule, FieldsetModule, ButtonModule, AvatarModule, RouterOutlet,TranslateModule],
-  templateUrl: './news-info.component2.html',
+  templateUrl: './news-info.component.html',
   styleUrls: ['./news-info.component.scss']
 })
 export class NewsInfoComponent implements OnInit, OnDestroy{
