@@ -1,7 +1,11 @@
-import { EventEmitter, TemplateRef } from '@angular/core';
+import { NewsService } from './../news.service';
+import { TemplateRef } from '@angular/core';
 import { News } from '@his-viewmodel/appportal/dist';
+import { SharedService } from '@his-base/shared';
+import { Coding } from '@his-base/datatypes/dist';
 import * as i0 from "@angular/core";
 export declare class NewsListComponent {
+    #private;
     /** 接收自父component收到的最新消息
      *  @memberof NewsListComponent
      */
@@ -10,14 +14,16 @@ export declare class NewsListComponent {
      *  @memberof NewsListComponent
      */
     customTemplate?: TemplateRef<any>;
-    /** 宣告’請點選進入’eventEmitter
-     *  @memberof NewsListComponent
+    newsService: NewsService;
+    sharedService: SharedService<any>;
+    /** 跳轉到appUrl路徑的位置，並使用sharedService傳送資訊
+     *  @memberof NewsInfoComponent
      */
-    navigationData: EventEmitter<any>;
-    /** 發送‘請點選進入’事件，並傳送一個包含appUrl路徑與sharedData資料的物件
-     *  @memberof NewsListComponent
+    onNavNewsClick(appUrl: string, sharedData: object): void;
+    /** 發送`最新消息狀態改為已讀/已完成`到nats
+     *  @memberof NewsInfoComponent
      */
-    directTo(appUrl: string, sharedData: object): void;
+    onChangeStatus(userCode: Coding, newsId: string): Promise<void>;
     static ɵfac: i0.ɵɵFactoryDeclaration<NewsListComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<NewsListComponent, "his-news-list", never, { "news": { "alias": "news"; "required": false; }; "customTemplate": { "alias": "customTemplate"; "required": false; }; }, { "navigationData": "navigationData"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<NewsListComponent, "his-news-list", never, { "news": { "alias": "news"; "required": false; }; "customTemplate": { "alias": "customTemplate"; "required": false; }; }, {}, never, never, true, never>;
 }

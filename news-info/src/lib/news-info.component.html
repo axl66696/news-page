@@ -37,7 +37,6 @@
       <his-news-list
         [news]="toDoList()"
         class="news-container"
-        [customTemplate]="customTemplateUnfinish"
       ></his-news-list>
     </p-fieldset>
 
@@ -55,7 +54,6 @@
       <his-news-list
         [news]="normalNews()"
         class="news-container"
-        [customTemplate]="customTemplateAnnouncement"
       ></his-news-list>
     </p-fieldset>
 
@@ -73,7 +71,6 @@
       <his-news-list
         [news]="checkedToDoList()"
         class="news-container"
-        [customTemplate]="customTemplateToDoListChecked"
       ></his-news-list>
     </p-fieldset>
 
@@ -91,29 +88,28 @@
       <his-news-list
         [news]="checkedNormalNews()"
         class="news-container"
-        [customTemplate]="customTemplateAnnouncementChecked"
       ></his-news-list>
     </p-fieldset>
   </div>
 </div>
 
-<ng-template #customTemplateUnfinish>
+<ng-template #customtemplate>
   <p-table
     [value]="toDoList()"
-    [tableStyle]="{ width: '100%' }"
-  >
+    [tableStyle]="{ width: '100%' }">
     <ng-template pTemplate="body" let-news>
       <tr>
         <td>
-          <button
-            pButton
-            pRipple
-            type="button"
-            [label]="'complete' |translate"
-            class="p-button-outlined"
-            (click)="onChangeStatus(news.userCode, news._id)"
-
-          ></button>
+          <span *ngIf="news.execStatus['code'] === '10'">
+            <button
+              pButton
+              pRipple
+              type="button"
+              [label]="'complete' |translate"
+              class="p-button-outlined"
+              (click)="onChangeStatus(news.userCode, news._id)"
+            ></button>
+          </span>
         </td>
         <td>
           <span class="label-m">{{ news.period.start.toLocaleString() }}</span>
@@ -122,79 +118,8 @@
           <span class="label-m">{{ news.subject }}</span>
         </td>
         <td>
-          <span>
+          <span *ngIf="news.url">
             <p-button #navButton [label]="'clickToEnter'|translate" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
-          </span>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</ng-template>
-
-<ng-template #customTemplateAnnouncement>
-  <p-table
-    [value]="normalNews()"
-    [tableStyle]="{ width: '100%' }"
-  >
-    <ng-template pTemplate="body" let-news>
-      <tr>
-        <td>
-          <button
-            pButton
-            pRipple
-            type="button"
-            [label]="'checked'|translate"
-            class="p-button-outlined"
-            (click)="onChangeStatus(news.userCode, news._id)"
-          ></button>
-        </td>
-        <td>{{ news.period.start.toLocaleString() }}</td>
-        <td>
-          <span class="label-m">{{ news.subject }}</span>
-        </td>
-        <td>
-          <span>
-            <p-button #navButton [label]="'clickToEnter'|translate" styleClass="p-button-link" (click)="onNavNewsClick(news.url,news.sharedData)"></p-button>
-          </span>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</ng-template>
-
-<ng-template #customTemplateToDoListChecked>
-  <p-table
-    [value]="checkedToDoList()"
-    [tableStyle]="{ width: '100%' }"
-  >
-    <ng-template pTemplate="body" let-news>
-      <tr>
-        <td>{{ news.period.start.toLocaleString() }}</td>
-        <td>
-          <span class="label-m">{{ news.subject }}</span>
-        </td>
-        <td>
-          <span>
-          </span>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
-</ng-template>
-
-<ng-template #customTemplateAnnouncementChecked>
-  <p-table
-    [value]="checkedNormalNews()"
-    [tableStyle]="{ width: '100%' }"
-  >
-    <ng-template pTemplate="body" let-news>
-      <tr>
-        <td>{{ news.period.start.toLocaleString() }}</td>
-        <td>
-          <span class="label-m">{{ news.subject }}</span>
-        </td>
-        <td>
-          <span>
           </span>
         </td>
       </tr>
