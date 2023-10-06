@@ -10,7 +10,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { Coding } from '@his-base/datatypes';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { SharedService } from '@his-base/shared';
 
 
@@ -42,16 +42,6 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   sharedService = inject(SharedService);
   httpClient = inject(HttpClient)
   #router = inject(Router);
-
-  /** HttpClient引入假userCode
-   *  @memberof NewsInfoComponent
-   */
-  constructor(private http:HttpClient){
-    http.get('http://localhost:4321/assets/mockUserCode/mockUserCode.json')
-        .subscribe(userCode => {
-          this.userCode = userCode as Coding;
-        })
-  }
 
   /** 建立連線、訂閱最新消息、初始化最新消息
    *  @memberof NewsInfoComponent

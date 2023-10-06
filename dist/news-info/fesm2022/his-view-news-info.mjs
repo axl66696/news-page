@@ -189,9 +189,9 @@ class NewsListComponent {
     /** 跳轉到appUrl路徑的位置，並使用sharedService傳送資訊
      *  @memberof NewsInfoComponent
      */
-    onNavNewsClick(appUrl, sharedData) {
+    onNavNewsClick(url, sharedData) {
         const key = this.sharedService.setValue(sharedData);
-        this.#router.navigate([appUrl], { state: { token: key } });
+        this.#router.navigate([url], { state: { token: key } });
     }
     /** 發送`最新消息狀態改為已讀/已完成`到nats
      *  @memberof NewsInfoComponent
