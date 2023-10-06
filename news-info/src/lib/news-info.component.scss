@@ -57,10 +57,10 @@
       &.first {
         .p-fieldset-toggleable .p-fieldset-legend {
           a {
-            color: var(--surface-on-surface);
+            color: var(--white);
           }
 
-          background-color: #fee9d1;
+          background-color: var(--tertiary-main);
         }
       }
       &.second {
@@ -68,15 +68,15 @@
           a {
             color: #f6f6f6;
           }
-          background-color: #414644;
+          background-color: var(--primary-main);
         }
       }
       &.third {
         .p-fieldset-toggleable .p-fieldset-legend {
           a {
-            color: var(--primary-main);
+            color: var(--surface-on-surface);
           }
-          background-color: var(--primary-container);
+          background-color: var(--surface-section);
         }
       }
     }
