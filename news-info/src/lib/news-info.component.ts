@@ -12,13 +12,14 @@ import { Coding } from '@his-base/datatypes';
 import { JetstreamWsService } from '@his-base/jetstream-ws';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
+import { SharedService } from '@his-base/shared';
 
 
 @Component({
   selector: 'his-news-info',
   standalone: true,
   imports: [CommonModule, NewsListComponent, TableModule, FieldsetModule, ButtonModule, AvatarModule, RouterOutlet,TranslateModule],
-  templateUrl: './news-info.component.html',
+  templateUrl: './news-info.component2.html',
   styleUrls: ['./news-info.component.scss']
 })
 export class NewsInfoComponent implements OnInit, OnDestroy{
@@ -39,6 +40,7 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   mockUserCode!:Coding
 
   newsService = inject(NewsService);
+  sharedService = inject(SharedService);
   #jetStreamWsService = inject(JetstreamWsService);
   #router = inject(Router);
 
@@ -68,11 +70,12 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
     window.history.back();
   }
 
-  /** 跳轉到appUrl路徑的位置，並附帶傳送的資訊
+  /** 跳轉到appUrl路徑的位置，並使用sharedService傳送資訊
    *  @memberof NewsInfoComponent
    */
   onNavNewsClick(appUrl:string, sharedData:object):void{
-    this.#router.navigate([appUrl],{state:sharedData});
+    const key = this.sharedService.setValue(sharedData)
+    this.#router.navigate([appUrl],{state:{token:key}});
   }
 
   /** 發送`最新消息狀態改為已讀/已完成`到nats
