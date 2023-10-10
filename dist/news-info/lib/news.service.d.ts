@@ -32,11 +32,11 @@ export declare class NewsService {
     /** 依‘一般消息’、’待辦工作’分類最新消息
      *  @memberof NewsService
      */
-    filterType(code?: Coding['code']): News[];
+    filterType(code: Coding['code']): News[];
     /** 依`已讀/已完成`、`未讀/未完成`分類最新消息
      *  @memberof NewsService
      */
-    filterStatus(newsList: News[], code?: Coding['code']): News[];
+    filterStatus(newsList: News[], code: Coding['code']): News[];
     /** 僅顯示未超過24小時的已讀一般消息/待辦工作
      *  @memberof NewsService
      */

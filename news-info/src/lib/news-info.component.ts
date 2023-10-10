@@ -9,7 +9,6 @@ import { ButtonModule } from 'primeng/button';
 import { Router, RouterOutlet } from '@angular/router';
 import { AvatarModule } from 'primeng/avatar';
 import { Coding } from '@his-base/datatypes';
-import { JetstreamWsService } from '@his-base/jetstream-ws';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from '@his-base/shared';
@@ -37,30 +36,24 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   /** userCode測試資料
    *  @memberof NewsInfoComponent
    */
-  mockUserCode!:Coding
+  userCode!:Coding
 
   newsService = inject(NewsService);
   sharedService = inject(SharedService);
-  #jetStreamWsService = inject(JetstreamWsService);
+  httpClient = inject(HttpClient)
   #router = inject(Router);
-
-  /** HttpClient引入userCode測試資料
-   *  @memberof NewsInfoComponent
-   */
-  constructor(private http:HttpClient){
-    http.get('http://localhost:4321/assets/mockUserCode/mockUserCode.json')
-        .subscribe(userCode => {
-          this.mockUserCode = userCode as Coding;
-        })
-  }
 
   /** 建立連線、訂閱最新消息、初始化最新消息
    *  @memberof NewsInfoComponent
    */
   async ngOnInit(): Promise<void> {
+    this.httpClient.get('http://localhost:4321/assets/mockUserCode/mockUserCode.json')
+                   .subscribe(userCode => {
+                    this.userCode = userCode as Coding;
+                  })
     await this.newsService.connect();
     await this.newsService.subNews();
-    this.newsService.publishUserCode(this.mockUserCode);
+    this.newsService.publishUserCode(this.userCode);
   }
 
   /** 跳轉到上一頁

@@ -2,10 +2,10 @@ import { OnInit, OnDestroy } from '@angular/core';
 import { NewsService } from './news.service';
 import { Coding } from '@his-base/datatypes';
 import { HttpClient } from '@angular/common/http';
+import { SharedService } from '@his-base/shared';
 import * as i0 from "@angular/core";
 export declare class NewsInfoComponent implements OnInit, OnDestroy {
     #private;
-    private http;
     /** 使用computed變數儲存各最新消息的資訊
      *  @memberof NewsInfoComponent
      */
@@ -14,15 +14,13 @@ export declare class NewsInfoComponent implements OnInit, OnDestroy {
     toDoList: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
     checkedNormalNews: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
     checkedToDoList: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
-    /** userCode假資料
+    /** userCode測試資料
      *  @memberof NewsInfoComponent
      */
-    mockUserCode: Coding;
+    userCode: Coding;
     newsService: NewsService;
-    /** HttpClient引入假userCode
-     *  @memberof NewsInfoComponent
-     */
-    constructor(http: HttpClient);
+    sharedService: SharedService<any>;
+    httpClient: HttpClient;
     /** 建立連線、訂閱最新消息、初始化最新消息
      *  @memberof NewsInfoComponent
      */
@@ -31,7 +29,7 @@ export declare class NewsInfoComponent implements OnInit, OnDestroy {
      *  @memberof NewsInfoComponent
      */
     onBackClick(): void;
-    /** 跳轉到appUrl路徑的位置，並附帶傳送的資訊
+    /** 跳轉到appUrl路徑的位置，並使用sharedService傳送資訊
      *  @memberof NewsInfoComponent
      */
     onNavNewsClick(appUrl: string, sharedData: object): void;
