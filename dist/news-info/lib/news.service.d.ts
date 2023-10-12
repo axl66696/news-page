@@ -24,7 +24,7 @@ export declare class NewsService {
     /** publish userCode到nats
      *  @memberof NewsService
      */
-    publishUserCode(userCode: Coding): void;
+    publishUserCode(userCode: string): void;
     /** 發送`最新消息狀態改為已讀/已完成`到nats
      *  @memberof NewsService
      */
@@ -32,7 +32,7 @@ export declare class NewsService {
     /** 依‘一般消息’、’待辦工作’分類最新消息
      *  @memberof NewsService
      */
-    filterType(code: Coding['code']): News[];
+    filterType(newsList: News[], code: Coding['code']): News[];
     /** 依`已讀/已完成`、`未讀/未完成`分類最新消息
      *  @memberof NewsService
      */
@@ -41,7 +41,15 @@ export declare class NewsService {
      *  @memberof NewsService
      */
     filterOverdue(newsList: News[]): News[];
-    /** 最新消息更新時設定所有Signal
+    /** 搜尋含subject字串的最新消息
+     *  @memberof NewsService
+     */
+    filterSubject(subject: string): void;
+    /** 回復到上一次取得最新消息的狀態
+     *  @memberof NewsService
+     */
+    filterReset(): void;
+    /** 設定除了原始最新消息news以外的Signal
      *  @memberof NewsService
      */
     setNews(news: News[]): void;

@@ -21,6 +21,12 @@
         ></button>
         <div><h3 [innerText]="'latestNews'|translate"></h3></div>
       </div>
+      <div>
+        <span class="p-input-icon-left" >
+          <i class="pi pi-search"></i>
+          <input type="text" pinputtext="" [placeholder]="'search'|translate" class="p-inputtext p-component p-element" [(ngModel)]="query" (keyup)="filterSubject()" (keyup.excape)="filterReset()">
+        </span>
+      </div>
   </div>
   <div class="flex flex-column">
     <p-fieldset [legend]="'todolist'|translate" [toggleable]="true" class="first">
@@ -112,7 +118,7 @@
           </span>
         </td>
         <td>
-          <span class="label-m">{{ news.period.start.toLocaleString() }}</span>
+          <span class="label-m">{{ news.period.start.toLocaleString({hour12:false}) }}</span>
         </td>
         <td>
           <span class="label-m">{{ news.subject }}</span>

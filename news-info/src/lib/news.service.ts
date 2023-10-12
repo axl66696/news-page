@@ -55,7 +55,7 @@ export class NewsService {
   /** publish userCode到nats
    *  @memberof NewsService
    */
-  publishUserCode(userCode:Coding): void {
+  publishUserCode(userCode:string): void {
     this.#jetStreamWsService.publish("news.wantNews", userCode);
   }
 
@@ -70,10 +70,9 @@ export class NewsService {
   /** 依‘一般消息’、’待辦工作’分類最新消息
    *  @memberof NewsService
    */
-  filterType(code:Coding['code']): News[]{
-    const newsList=this.news();
+  filterType(newsList:News[], code:Coding['code']): News[]{
     if(code){
-      return this.news().filter(newsData=>newsData.type['code']==code);
+      return newsList.filter(newsData=>newsData.type['code']==code);
     }
     else{
       return newsList;
@@ -101,13 +100,27 @@ export class NewsService {
     return newsList.filter(newsData=>date.valueOf() - newsData.execTime.valueOf() < aDay);
   }
 
-  /** 最新消息更新時設定所有Signal
+  /** 搜尋含subject字串的最新消息
+   *  @memberof NewsService
+   */
+  filterSubject(subject:string){
+    const newsList=this.news();
+    this.setNews(newsList.filter(newsData=>newsData.subject.match(subject)));
+  }
+
+  /** 回復到上一次取得最新消息的狀態
+   *  @memberof NewsService
+   */
+  filterReset(){
+    this.setNews(this.news())
+  }
+
+  /** 設定除了原始最新消息news以外的Signal
    *  @memberof NewsService
    */
   setNews(news:News[]): void{
-    this.news.set(news as News[]);
-    this.allNormalNews.set(this.filterType("10"));
-    this.allTodoList.set(this.filterType("60"));
+    this.allNormalNews.set(this.filterType(news, "10"));
+    this.allTodoList.set(this.filterType(news, "60"));
     this.normalNews.set(this.filterStatus(this.allNormalNews(), "10"));
     this.toDoList.set(this.filterStatus(this.allTodoList(),"10"));
     this.checkedNormalNews.set(this.filterOverdue(this.filterStatus(this.allNormalNews(), "60")));
@@ -165,6 +178,7 @@ export class NewsService {
       .subscribe(() => {});
 
     this.#userNews.subscribe((newsList:any) => {
+      this.news.set(this.formatNews(newsList as News[]));
       this.setNews(this.formatNews(newsList));
     });
   }

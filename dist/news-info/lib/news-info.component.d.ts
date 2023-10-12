@@ -14,10 +14,14 @@ export declare class NewsInfoComponent implements OnInit, OnDestroy {
     toDoList: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
     checkedNormalNews: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
     checkedToDoList: import("@angular/core").Signal<import("@his-viewmodel/appportal/dist").News[]>;
+    /** 使用者進行查詢所需的查詢式
+     *  @memberof NewsInfoComponent
+     */
+    query: string;
     /** userCode測試資料
      *  @memberof NewsInfoComponent
      */
-    userCode: Coding;
+    userCode: string;
     newsService: NewsService;
     sharedService: SharedService<any>;
     httpClient: HttpClient;
@@ -37,6 +41,14 @@ export declare class NewsInfoComponent implements OnInit, OnDestroy {
      *  @memberof NewsInfoComponent
      */
     onChangeStatus(userCode: Coding, newsId: string): Promise<void>;
+    /** 搜尋標題包含query的最新消息
+     *  @memberof NewsInfoComponent
+     */
+    filterSubject(): void;
+    /** 清空搜尋列時回復到上一次取得最新消息的狀態
+     *  @memberof NewsInfoComponent
+     */
+    filterReset(): void;
     /** 清除連線
      *  @memberof NewsInfoCoponent
      */

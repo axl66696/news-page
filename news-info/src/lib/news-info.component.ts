@@ -12,12 +12,13 @@ import { Coding } from '@his-base/datatypes';
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { SharedService } from '@his-base/shared';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'his-news-info',
   standalone: true,
-  imports: [CommonModule, NewsListComponent, TableModule, FieldsetModule, ButtonModule, AvatarModule, RouterOutlet,TranslateModule],
+  imports: [CommonModule, NewsListComponent, TableModule, FieldsetModule, ButtonModule, AvatarModule, RouterOutlet,TranslateModule,FormsModule],
   templateUrl: './news-info.component.html',
   styleUrls: ['./news-info.component.scss']
 })
@@ -33,10 +34,15 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   checkedNormalNews = computed(() => this.newsService.checkedNormalNews());
   checkedToDoList = computed(()=>this.newsService.checkedToDoList());
 
+  /** 使用者進行查詢所需的查詢式
+   *  @memberof NewsInfoComponent
+   */
+  query = ''
+
   /** userCode測試資料
    *  @memberof NewsInfoComponent
    */
-  userCode!:Coding
+  userCode!:string
 
   newsService = inject(NewsService);
   sharedService = inject(SharedService);
@@ -49,7 +55,7 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   async ngOnInit(): Promise<void> {
     this.httpClient.get('http://localhost:4321/assets/mockUserCode/mockUserCode.json')
                    .subscribe(userCode => {
-                    this.userCode = userCode as Coding;
+                    this.userCode = userCode as unknown as string;
                   })
     await this.newsService.connect();
     await this.newsService.subNews();
@@ -76,6 +82,20 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
    */
   async onChangeStatus(userCode:Coding, newsId:string):Promise<void>{
     this.newsService.changeStatus(userCode, newsId);
+  }
+
+  /** 搜尋標題包含query的最新消息
+   *  @memberof NewsInfoComponent
+   */
+  filterSubject(){
+    this.newsService.filterSubject(this.query);
+  }
+
+  /** 清空搜尋列時回復到上一次取得最新消息的狀態
+   *  @memberof NewsInfoComponent
+   */
+  filterReset(){
+    this.newsService.filterReset();
   }
 
   /** 清除連線
