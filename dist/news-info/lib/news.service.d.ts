@@ -24,7 +24,7 @@ export declare class NewsService {
     /** publish userCode到nats
      *  @memberof NewsService
      */
-    publishUserCode(userCode: string): void;
+    publishUserCode(userCode: Coding): void;
     /** 發送`最新消息狀態改為已讀/已完成`到nats
      *  @memberof NewsService
      */

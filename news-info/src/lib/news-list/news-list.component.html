@@ -25,6 +25,7 @@
           </span>
         </td>
         <td><span class="label-m">{{ news.period.start.toLocaleString([],{hour12:false}) }}</span>
+        <!-- <td><span class="label-m">{{ formatDate(news.period.start) }}</span> -->
         <td><span class="label-m">{{ news.subject }}</span></td>
         <td>
           <span *ngIf="news.url">

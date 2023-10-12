@@ -42,7 +42,7 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   /** userCode測試資料
    *  @memberof NewsInfoComponent
    */
-  userCode!:string
+  userCode!:Coding
 
   newsService = inject(NewsService);
   sharedService = inject(SharedService);
@@ -55,7 +55,7 @@ export class NewsInfoComponent implements OnInit, OnDestroy{
   async ngOnInit(): Promise<void> {
     this.httpClient.get('http://localhost:4321/assets/mockUserCode/mockUserCode.json')
                    .subscribe(userCode => {
-                    this.userCode = userCode as unknown as string;
+                    this.userCode = userCode as Coding;
                   })
     await this.newsService.connect();
     await this.newsService.subNews();

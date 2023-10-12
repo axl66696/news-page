@@ -55,8 +55,8 @@ export class NewsService {
   /** publish userCode到nats
    *  @memberof NewsService
    */
-  publishUserCode(userCode:string): void {
-    this.#jetStreamWsService.publish("news.wantNews", userCode);
+  publishUserCode(userCode:Coding): void {
+    this.#jetStreamWsService.publish("news.getNews", userCode);
   }
 
   /** 發送`最新消息狀態改為已讀/已完成`到nats
@@ -163,7 +163,7 @@ export class NewsService {
     const jsonCodec = JSONCodec();
     this.#consumerMessages$ = this.#jetStreamWsService.subscribe(
       SubscribeType.Push,
-      'news.getNews.dashboard'
+      'news.showNews.dashboard'
     );
 
     this.#consumerMessages$

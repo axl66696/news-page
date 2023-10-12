@@ -16,6 +16,8 @@ export declare class NewsListComponent {
     customTemplate?: TemplateRef<any>;
     newsService: NewsService;
     sharedService: SharedService<any>;
+    date: Date;
+    formatDate(date: Date): string;
     /** 跳轉到appUrl路徑的位置，並使用sharedService傳送資訊
      *  @memberof NewsInfoComponent
      */

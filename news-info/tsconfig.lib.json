@@ -6,7 +6,12 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "node"
+    ],
+    "moduleResolution": "node"
+
   },
   "exclude": [
     "**/*.spec.ts"

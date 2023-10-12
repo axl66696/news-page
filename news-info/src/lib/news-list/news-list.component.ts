@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { NewsService } from './../news.service';
 /* eslint-disable @angular-eslint/component-selector */
-import { Component, Input, TemplateRef, inject } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { News } from '@his-viewmodel/appportal/dist'
 import { TableModule } from 'primeng/table';
@@ -9,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { SharedService } from '@his-base/shared';
 import { Coding } from '@his-base/datatypes/dist';
+import * as moment from 'moment';
 
 @Component({
   selector: 'his-news-list',
@@ -17,7 +19,7 @@ import { Coding } from '@his-base/datatypes/dist';
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.scss']
 })
-export class NewsListComponent {
+export class NewsListComponent{
 
   /** 接收自父component收到的最新消息
    *  @memberof NewsListComponent
@@ -32,6 +34,17 @@ export class NewsListComponent {
   newsService = inject(NewsService)
   sharedService = inject(SharedService);
   #router = inject(Router);
+
+  date!: Date;
+  // moment = require("moment");
+
+
+  formatDate(date:Date){
+
+    const localDateTime = date.toLocaleString([],{hour12:false});
+    console.log("format time", moment(localDateTime).format('YYYY-MM-DD HH:mm'));
+    return moment(localDateTime).format('YYYY-MM-DD HH:mm');
+  }
 
   /** 跳轉到appUrl路徑的位置，並使用sharedService傳送資訊
    *  @memberof NewsInfoComponent

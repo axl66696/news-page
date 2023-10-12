@@ -41,7 +41,8 @@
             ],
             "scripts": [],
             "extraWebpackConfig": "news-page/webpack.config.js",
-            "commonChunk": false
+            "commonChunk": false,
+            "allowedCommonJsDependencies":["moment"]
           },
           "configurations": {
             "production": {

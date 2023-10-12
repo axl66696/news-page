@@ -21,7 +21,7 @@ export declare class NewsInfoComponent implements OnInit, OnDestroy {
     /** userCode測試資料
      *  @memberof NewsInfoComponent
      */
-    userCode: string;
+    userCode: Coding;
     newsService: NewsService;
     sharedService: SharedService<any>;
     httpClient: HttpClient;
